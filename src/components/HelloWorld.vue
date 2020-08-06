@@ -1,58 +1,112 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="container">
+    <h1>
+      VueJs TodoList ({{
+        todos.filter((t) => !t.done).length
+      }})
+    </h1>
+    <div class="todo-creator">
+      <input
+        class="input"
+        type="text"
+        v-model="newTask"
+        @keyup.enter="addTask"
+        placeholder="New Task"
+      />
+      <button
+        class="btn"
+        @click="addTask"
+      >
+        Add Task
+      </button>
+    </div>
+    <div
+      class="todo-item"
+      v-bind:class="{ 'todo-item--completed': todo.done }"
+      v-for="todo in todos"
+      :key="todo.id"
+      @click="completeTask(todo)"
+    >
+      {{ todo.title }}
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
+  data() {
+    return {
+      newTask: '',
+      todos: [
+        { id: 1, title: 'learn vuejs', done: false},
+        { id: 2, title: 'learn reactjs', done: false},
+        { id: 3, title: 'learn angularjs', done: false},
+      ]
+    };
+  },
+  methods: {
+    addTask() {
+      if (this.newTask) {
+        this.todos.push({
+          title: this.newTask,
+          done: false,
+        });
+        this.newTask = ''
+      }
+    },
+    completeTask(task) {
+      task.done = !task.done;
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+  .container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .todo-item {
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 5px;
+    width: 80%;
+    background-color: blue;
+    color: white;
+    font-weight: 600;
+  }
+
+  .todo-item--completed {
+    text-decoration: line-through;
+  }
+
+  .todo-creator {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 50px;
+  }
+
+  .input {
+    font-size: 20px;
+    background: lightblue;
+    border-color: blue;
+    border-radius: 5px;
+    color: darkred;
+    padding: 5px 20px;
+    margin-right: 20px;
+  }
+
+  .btn {
+    background-color: green;
+    padding: 10px 5px;
+    border: none;
+    font-size: 20px;
+    border-radius: 5px;
+    color: white;
+  }
 </style>
